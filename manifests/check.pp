@@ -139,13 +139,13 @@ define sensuclassic::check (
   }
 
   if $subdue =~ Hash {
-    if !( has_key($subdue, 'days') and $subdue['days'] =~ Hash ){
+    if !( 'days' in $subdue and $subdue['days'] =~ Hash ){
       fail("sensuclassic::check{${name}}: subdue hash should have a proper format. (got: ${subdue}) See https://sensuapp.org/docs/latest/reference/checks.html#subdue-attributes")
     }
   }
   if $proxy_requests {
     if $proxy_requests =~ Hash {
-      if !( has_key($proxy_requests, 'client_attributes') ) {
+      if !( 'client_attributes' in $proxy_requests ) {
         fail("sensuclassic::check{${name}}: proxy_requests hash should have a proper format. (got: ${proxy_requests})  See https://sensuapp.org/docs/latest/reference/checks.html#proxy-requests-attributes")
       }
     } elsif !($proxy_requests == 'absent') {
@@ -193,7 +193,7 @@ define sensuclassic::check (
   Anchor['plugins_before_checks']
   ~> Sensuclassic::Check[$name]
 
-  if is_hash($hooks) {
+  if $hooks =~ Hash {
     $hooks.each |$k,$v| {
       $valid_k = $k ? {
         Integer[1,255]                                           => true,
